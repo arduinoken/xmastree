@@ -13,8 +13,8 @@ static uint16_t c;
 G35 lights(G35_PIN, LIGHT_COUNT);
 
 void StarTwinkle(){
-    delay(000);
-    for (int count = 1; count<8;count++)
+    delay(00);
+    for (int count = 1; count<64;count++)
     {
       lights.set_color(35, (G35::MAX_INTENSITY), COLOR_WHITE);
       lights.set_color(34, (G35::MAX_INTENSITY/2), COLOR_WHITE);
@@ -51,41 +51,41 @@ void Star(){
 void Top(){
   lights.set_color(31, (G35::MAX_INTENSITY/4), COLOR_GREEN);
 }
-void layer1(uint8_t intensity, color_t color){
-  int count = 0;
-  do{
-    lights.set_color((30-count), intensity, color);
-    count++;
-  } while (count<3);
-}
-void layer2(uint8_t intensity, color_t color){
-  
-  int count = 0;
-  do{
-    lights.set_color((27-count), intensity, color);
-    count++;
-  } while (count<3);
+void layer(boolean Forward,uint8_t start,uint8_t Bcount,uint8_t intensity, color_t color){
+  uint8_t count = 0;
+  if(Bcount==7){
+    start=start+2;
+      lights.set_color(4, intensity, color);
+      delay(50);
+      lights.set_color(5, intensity, color);
+       delay(50);
+      lights.set_color(3, intensity, color);
+       delay(50);
+    do{
+      lights.set_color((start+count), intensity, color);
+      delay(50);
+      count++;
+    } while (count<(Bcount-3));
   }
-void layer3(uint8_t intensity, color_t color){int count = 0;
-  do{
-    lights.set_color((24-count), intensity, color);
-    count++;
-  } while (count<4);
+  else{
+    if (Forward == false){
+      do{
+        lights.set_color((start-count), intensity, color);
+        delay(50);
+        count++;
+      } while (count<Bcount);
+    }
+    else{
+      count = 0;
+      do{
+        lights.set_color((start+count), intensity, COLOR_GREEN);
+        delay(50);
+        count++;
+      } while (count<Bcount);
+    }
+  }
 }
-void layer4(uint8_t intensity, color_t color){
-  int count = 0;
-  do{
-    lights.set_color((20-count), intensity, color);
-    count++;
-  } while (count<5);
-}
-void layer5(uint8_t intensity, color_t color){
-  int count = 0;
-  do{
-    lights.set_color((15-count), intensity, color);
-    count++;
-  } while (count<6);
-}
+
 void layer6(uint8_t intensity, color_t color){
   int count = 0;
   do{
@@ -100,12 +100,12 @@ void TrunkBase(){
 
 void BasicTree() {
   Top();delay(1000);
-  layer1(G35::MAX_INTENSITY, COLOR_ORANGE);delay(500);
-  layer2(G35::MAX_INTENSITY, COLOR_RED);delay(500);
-  layer3(G35::MAX_INTENSITY, COLOR_BLUE);delay(500);
-  layer4(G35::MAX_INTENSITY, COLOR_YELLOW);delay(500);
-  layer5(G35::MAX_INTENSITY, COLOR_CYAN);delay(500);
-  layer6(G35::MAX_INTENSITY, COLOR_GREEN);delay(500);
+  layer(false,30,3,G35::MAX_INTENSITY, COLOR_RED);delay(500);
+  layer(true,25,3,G35::MAX_INTENSITY, COLOR_GREEN);delay(500);
+  layer(false,24,4,G35::MAX_INTENSITY, COLOR_RED);delay(500);
+  layer(true,16,5,G35::MAX_INTENSITY, COLOR_GREEN);delay(500);
+  layer(false,15,6,G35::MAX_INTENSITY, COLOR_RED);delay(500);
+  layer(true,4,7,G35::MAX_INTENSITY, COLOR_GREEN);delay(500);
   }
 void Trunk(){
   lights.set_color(6, (G35::MAX_INTENSITY/8), COLOR(0xf,0x4,0x0));
@@ -152,155 +152,97 @@ void SingleStrandTree(int delay1,uint8_t intensity, color_t color,color_t BGcolo
     TreeS4(delay1,intensity, color, BGcolor);delay(25);
     TreeS3(delay1,intensity, color, BGcolor);delay(50);
     TreeS2(delay1,intensity, color, BGcolor);delay(100);
+    TreeS1(delay1,intensity, color, BGcolor);delay(100);
 }
 void TreeS1(int delay1, uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  lights.set_color(31, intensity, color);delay(delay1);
-  lights.set_color(30, intensity, color);delay(delay1);
-  lights.set_color(25, intensity, color);delay(delay1);
-  lights.set_color(24, intensity, color);delay(delay1);
-  lights.set_color(16, intensity, color);delay(delay1);
-  lights.set_color(15, intensity, color);delay(delay1);
-  lights.set_color(4, intensity, color);
+  int bulb[] = {31,30,25,24,16,15,4}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS2(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();
-  lights.set_color(31, intensity, color);delay(delay1);
-  lights.set_color(29, intensity, color);delay(delay1);
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(23, intensity, color);delay(delay1);
-  lights.set_color(17, intensity, color);delay(delay1);
-  lights.set_color(14, intensity, color);delay(delay1);
-  lights.set_color(5, intensity, color);
+  int bulb[] = {31,29,26,23,17,14,5}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS3(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
-  lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();lights.set_color(31, intensity, color);
-  lights.set_color(39, intensity, color);delay(delay1);
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(22, intensity, color);delay(delay1);
-  lights.set_color(18, intensity, color);delay(delay1);
-  lights.set_color(13, intensity, color);delay(delay1);
-  lights.set_color(3, intensity, color);
+lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
+  int bulb[] = {31,29,26,22,18,13,3}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS4(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();lights.set_color(31, intensity, color);
-  lights.set_color(29, intensity, color);delay(delay1);
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(22, intensity, color);delay(delay1);
-  lights.set_color(18, intensity, color);delay(delay1);
-  lights.set_color(13, intensity, color);delay(delay1);
-  lights.set_color(6, intensity, color);
+  int bulb[] = {31,29,26,22,18,13,6}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+  lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS5(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();lights.set_color(31, intensity, color);
-  lights.set_color(29, intensity, color);delay(delay1);
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(22, intensity, color);delay(delay1);
-  lights.set_color(18, intensity, color);delay(delay1);
-  lights.set_color(12, intensity, color);delay(delay1);
-  lights.set_color(6, intensity, color);
+  int bulb[] = {31,29,26,22,18,12,6}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS6(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();lights.set_color(31, intensity, color);
-  lights.set_color(29, intensity, color);delay(delay1);
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(23, intensity, color);delay(delay1);
-  lights.set_color(18, intensity, color);delay(delay1);
-  lights.set_color(12, intensity, color);delay(delay1);
-  lights.set_color(7, intensity, color);
+  int bulb[] = {31,29,26,23,18,12,7}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS7(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();lights.set_color(31, intensity, color);
-  lights.set_color(29, intensity, color);delay(delay1);
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(22, intensity, color);delay(delay1);
-  lights.set_color(19, intensity, color);delay(delay1);
-  lights.set_color(11, intensity, color);delay(delay1);
-  lights.set_color(8, intensity, color);
+  int bulb[] = {31,29,26,22,19,11,8}; //bulb to light
+  for(int index = 0; index < 7; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeS8(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
   lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  StarTwinkle();lights.set_color(31, intensity, color);
-  lights.set_color(28, intensity, color);delay(delay1);
-  lights.set_color(27, intensity, color);delay(delay1);
-  lights.set_color(21, intensity, color);delay(delay1);
-  lights.set_color(20, intensity, color);delay(delay1);
-  lights.set_color(10, intensity, color);delay(delay1);
-  lights.set_color(9, intensity, color);
-}
-void TreeOutlineLG(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
-  //lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
-  int bulb[] = {31,28,27,21,20,10,9,8,7,6,3,5,4,15,16,24,25,30}; //bulb to light
-  for(int index = 0; index < (sizeof(bulb)); index++) {
+  int bulb[] = {31,28,27,21,20,10,9}; //bulb to light
+  for(int index = 0; index < 7; index++) {
     lights.set_color(bulb[index], intensity, color);delay(delay1);
   }
-//  
-//  lights.set_color(31, intensity, color);delay(delay1);
-//  lights.set_color(28, intensity, color);delay(delay1);
-//  lights.set_color(27, intensity, color);delay(delay1);
-//  lights.set_color(21, intensity, color);delay(delay1);
-//  lights.set_color(20, intensity, color);delay(delay1);
-//  lights.set_color(10, intensity, color);delay(delay1);
-//  lights.set_color(9, intensity, color);delay(delay1);
-//  lights.set_color(8, intensity, color);delay(delay1);
-//  lights.set_color(7, intensity, color);delay(delay1);
-//  lights.set_color(6, intensity, color);delay(delay1);
-//  lights.set_color(3, intensity, color);delay(delay1);
-//  lights.set_color(5, intensity, color);delay(delay1);
-//  lights.set_color(4, intensity, color);delay(delay1);
-//  lights.set_color(15, intensity, color);delay(delay1);
-//  lights.set_color(16, intensity, color);delay(delay1);
-//  lights.set_color(24, intensity, color);delay(delay1);
-//  lights.set_color(25, intensity, color);delay(delay1);
-//  lights.set_color(30, intensity, color);delay(delay1);
+}
+void TreeOutlineLG(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
+  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY/8, BGcolor);
+  int bulb[] = {31,28,27,21,20,10,9,8,7,6,3,5,4,15,16,24,25,30}; //bulb to light
+  for(int index = 0; index < 18; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeOutlineMED(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
-  //lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
- 
-  lights.set_color(26, intensity, color);delay(delay1);
-  lights.set_color(22, intensity, color);delay(delay1);
-  lights.set_color(19, intensity, color);delay(delay1);
-  lights.set_color(11, intensity, color);delay(delay1);
-  lights.set_color(8, intensity, color);delay(delay1);
-  lights.set_color(7, intensity, color);delay(delay1);
-  lights.set_color(6, intensity, color);delay(delay1);
-  lights.set_color(3, intensity, color);delay(delay1);
-  lights.set_color(5, intensity, color);delay(delay1);
-  lights.set_color(14, intensity, color);delay(delay1);
-  lights.set_color(17, intensity, color);delay(delay1);
-  lights.set_color(23, intensity, color);delay(delay1);
+  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY/8, BGcolor);
+  int bulb[] = {26,22,19,11,8,7,6,3,5,14,17,23}; //bulb to light
+  for(int index = 0; index < 12; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 void TreeOutlineSM(int delay1,uint8_t intensity, color_t color,color_t BGcolor){
-  //lights.fill_color(3, LIGHT_COUNT-7, G35::MAX_INTENSITY/8, BGcolor);
- 
-  lights.set_color(18, intensity, color);delay(delay1);
-  lights.set_color(12, intensity, color);delay(delay1);
-  lights.set_color(7, intensity, color);delay(delay1);
-  lights.set_color(6, intensity, color);delay(delay1);
-  lights.set_color(3, intensity, color);delay(delay1);
-  lights.set_color(13, intensity, color);delay(delay1);
+  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY/8, BGcolor);
+  int bulb[] = {18,12,7,6,3,13}; //bulb to light
+  for(int index = 0; index < 6; index++) {
+    lights.set_color(bulb[index], intensity, color);delay(delay1);
+  }
 }
 
 void common(){
-TrunkBase();delay(500);
+  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY, COLOR_BLACK);
+  TrunkBase();delay(500);
   Trunk();delay(500);
   BasicTree();
   StarTwinkle();
-  Trunk();delay(500);
-  delay(1000);
+  Trunk();delay(250);
 }
 void setup() {
   // Enumerate lights on string to enable individual bulb addressing
   lights.enumerate_forward();
-  delay(50);
-  
-  test();
   delay(1000);
   int count = 0;
   do{
@@ -308,16 +250,28 @@ void setup() {
     count++;
     delay(50);
   } while (count<36);
+  SingleColorTree(G35::MAX_INTENSITY, COLOR_BLUE);
+  delay(500);
+  SingleColorTree(G35::MAX_INTENSITY, COLOR_RED);
+  delay(500);
+  SingleColorTree(G35::MAX_INTENSITY, COLOR_GREEN);
+  delay(500);
   lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY, COLOR_BLACK);
 }
-void loop() {
-  TreeOutlineSM(10,G35::MAX_INTENSITY, COLOR_GREEN,COLOR_GREEN);
-  delay(100);
-  TreeOutlineMED(10,G35::MAX_INTENSITY, COLOR_GREEN,COLOR_RED);
-  delay(100);
-  lights.set_color(29,G35::MAX_INTENSITY, COLOR_GREEN);
-  TreeOutlineLG(10,G35::MAX_INTENSITY, COLOR_WHITE,COLOR_WHITE);
-  delay(100);
+void loop() {// fill_color makes all bulbs from 0 to LIGHT_COUNT the same brightness
+  // and color
+  common();
+ SingleStrandTree(100,G35::MAX_INTENSITY, COLOR_BLUE,COLOR_BLACK);
+//  delay(3000);
+//  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY, COLOR_BLACK);
+//  TreeOutlineLG(100,G35::MAX_INTENSITY, COLOR_BLUE,COLOR_BLACK);
+//  delay(100);
+//  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY, COLOR_BLACK);
+//  TreeOutlineMED(100,G35::MAX_INTENSITY, COLOR_BLUE,COLOR_BLACK);
+//  delay(100);
+//  lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY, COLOR_BLACK);
+//  TreeOutlineSM(100,G35::MAX_INTENSITY, COLOR_BLUE,COLOR_BLACK);
+//  delay(100);
   lights.fill_color(0, LIGHT_COUNT, G35::MAX_INTENSITY, COLOR_BLACK);
- // common();
+ 
 }
